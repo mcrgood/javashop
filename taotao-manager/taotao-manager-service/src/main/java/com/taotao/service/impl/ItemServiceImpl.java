@@ -3,6 +3,9 @@ import java.util.List;
 import com.taotao.pojo.TbItem;
 import com.taotao.pojo.TbItemExample;
 import com.taotao.service.ItemService;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.taotao.common.pojo.EUDataGridResult;
 import com.taotao.mapper.TbItemMapper;
 import org.springframework.stereotype.Service;
 import com.taotao.pojo.TbItemExample.Criteria;
@@ -24,6 +27,18 @@ public class ItemServiceImpl implements ItemService {
 			return item;
 		}
 		return null;
+	}
+	@Override
+	public EUDataGridResult getItemList(int page, int rows)
+	{
+		TbItemExample example = new TbItemExample();
+		PageHelper.startPage(page, rows);
+		List<TbItem> list = itemMapper.selectByExample(example);
+		EUDataGridResult result = new EUDataGridResult();
+		result.setRows(list);
+		PageInfo<TbItem> pageInfo = new PageInfo<>(list);
+		result.setTotal(pageInfo.getTotal());
+		return result;
 	}
 
 }
